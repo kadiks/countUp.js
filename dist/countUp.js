@@ -60,7 +60,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
         easingFn: null, // optional custom easing closure function, default is Robert Penner's easeOutExpo
-        formattingFn: null // optional custom formatting function, default is self.formatNumber below
+        formattingFn: null, // optional custom formatting function, default is self.formatNumber below
+        delay: 0
     };
     // extend default options with passed options object
     for (var key in options) {
@@ -80,6 +81,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     self.decimals = Math.max(0, decimals || 0);
     self.dec = Math.pow(10, self.decimals);
     self.duration = Number(duration) * 1000 || 2000;
+    self.delay = Number(self.options.delay) * 1000;
 
     self.formatNumber = function(nStr) {
         nStr = nStr.toFixed(self.decimals);
@@ -167,7 +169,9 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     // start your animation
     self.start = function(callback) {
         self.callback = callback;
-        self.rAF = requestAnimationFrame(self.count);
+        setTimeout(function() {
+          self.rAF = requestAnimationFrame(self.count);
+        }, self.delay);
         return false;
     };
     // toggles pause/resume animation
